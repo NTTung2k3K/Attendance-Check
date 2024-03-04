@@ -122,44 +122,26 @@ void loop() {
   Arduino_SoftSerial.listen();
   mySerial.listen();
 
-  char customKey;
   lcd.clear();
-  while (true) {
-    
-    
-    
-    lcd.clear();
-    lcd.print("Have A Good Day");
-    lcd.setCursor(0, 1);
-    lcd.print("Attendance Check");
-    delay(1000);
- customKey = customKeypad.getKey();
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("A:Enroll");
-    lcd.setCursor(0, 1);
-    lcd.print("B:Verify");
-    lcd.setCursor(9, 0);
-    lcd.print("C:Empty");
- customKey = customKeypad.getKey();
-    delay(3000);
+  //Security door
+  char customKey;
+  customKey = customKeypad.getKey();
+  lcd.clear();
+  lcd.print("A:Enroll");
+  lcd.setCursor(0, 1);
+  lcd.print("B:Verify");
+  lcd.setCursor(9, 0);
+  lcd.print("C:Empty");
 
-    lcd.clear();
-    lcd.print("Have A Good Day");
-    lcd.setCursor(0, 1);
-    lcd.print("Attendance Check");
-    delay(1000);
 
+  while (customKey == '\0') {
     customKey = customKeypad.getKey();
-    if (customKey != '\0') {
-      break;
-    }
   }
+
   Serial.print("KEY: ");
   Serial.print(customKey);
 
   lcd.clear();
-  // // dc r
 
 
   lcd.clear();
