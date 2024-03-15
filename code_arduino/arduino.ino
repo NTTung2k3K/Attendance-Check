@@ -6,10 +6,22 @@
 #include <Servo.h>
 
 
+
+
+
+
+
+
 //----------
 //Fingerprint
 SoftwareSerial mySerial(2, 3);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+
+
+
+
+
+
 
 
 //-----------
@@ -27,9 +39,21 @@ byte colPins[COLS] = { A0, A1, 8, 9 };  // Các chân nối đến các cột
 Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 
+
+
+
+
+
+
 //------------
 //init ID
 int id = 1;
+
+
+
+
+
+
 
 
 //------------
@@ -38,11 +62,29 @@ const int rs = 12, en = 13, d4 = A2, d5 = A3, d6 = A4, d7 = A5;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
+
+
+
+
+
+
 #define RX_PIN 10  // Chân RX của cổng nối tiếp mềm
 #define TX_PIN 11  // Chân TX của cổng nối tiếp mềm
 
 
+
+
+
+
+
+
 const int MAX_STUDENTS = 20;  // Số lượng tối đa sinh viên
+
+
+
+
+
+
 
 
 // Khai báo danh sách sinh viên
@@ -54,9 +96,45 @@ struct Student {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 Student students[MAX_STUDENTS];  // Danh sách sinh viên
 int numStudents = 0;
 char IdString[20];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -82,14 +160,44 @@ String data1;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //-------------
 //Setup
+
+
+
 
 void setup() {
   //Serial
   Serial.begin(9600);
   //connect esp
   Arduino_SoftSerial.begin(9600);
+
+
+
 
   //fingerprint
   finger.begin(57600);
@@ -105,25 +213,57 @@ void setup() {
   lcd.setCursor(0, 0);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // //check ID has fingerPrint or not
   while (finger.loadModel(id) == 0) {
     id++;
   }
 
 
+
+
   delay(1000);
 }
+
+
+
+
+
+
 
 
 //----------
 //main program
 
+
+
+
 void loop() {
   Arduino_SoftSerial.listen();
   mySerial.listen();
 
-  lcd.clear();
-  //Security door
+
   char customKey;
   customKey = customKeypad.getKey();
   lcd.clear();
@@ -134,18 +274,36 @@ void loop() {
   lcd.print("C:Empty");
 
 
+
+
   while (customKey == '\0') {
     customKey = customKeypad.getKey();
   }
-
-  Serial.print("KEY: ");
+  Serial.println("custom key");
   Serial.print(customKey);
 
+
+
+
   lcd.clear();
+
+
+
+
+
+
+
+
 
 
   lcd.clear();
   if (customKey == 'A') {
+
+
+
+
+
+
 
 
     lcd.print("Enroll mode");
@@ -155,6 +313,9 @@ void loop() {
     String stuId = getStudentIdFromKeypad();
     bool checkExisted = checkStudentIdExists(stuId);
     if (checkExisted == false) {
+
+
+
 
       while (!getFingerprintEnroll(stuId))
         ;
@@ -166,7 +327,16 @@ void loop() {
       lcd.print("Existed");
     }
 
+
+
+
   } else if (customKey == 'B') {
+
+
+
+
+
+
 
 
     lcd.print("Verify mode");
@@ -187,13 +357,43 @@ void loop() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   delay(1000);  // Đợi 1 giây trước khi gửi dữ liệu tiếp theo
 }
 
 
 
+
+
+
+
+
+
+
+
+
 String getStudentIdFromKeypad() {
   String studentId = "SE";  // Chuỗi lưu mã sinh viên
+
+
+
 
   lcd.print("Enrolling ID");
   lcd.setCursor(0, 1);
@@ -201,20 +401,31 @@ String getStudentIdFromKeypad() {
   lcd.setCursor(2, 1);
   while (studentId.length() < 8) {  // Lấy đúng 6 kí tự
     char key = customKeypad.getKey();
-    
-    if (isDigit(key)) {
+   if (isDigit(key)) {
       studentId += key;  // Thêm kí tự vào chuỗi
       lcd.print(key);    // Hiển thị kí tự lên LCD
     }
   }
 
+
+
+
   return studentId;
 }
+
+
+
+
+
+
 
 
 // -------------------------------
 // FUNCTION
 uint8_t getFingerprintEnroll(String stuId) {
+
+
+
 
   int p = -1;
   Serial.print("Waiting for valid finger to enroll as #");
@@ -258,7 +469,55 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // OK success!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -300,6 +559,9 @@ uint8_t getFingerprintEnroll(String stuId) {
     String studentId = getStudentIdByFingerId(finger.fingerID);
     lcd.print(studentId);
 
+
+
+
     delay(2000);
     lcd.clear();
     lcd.print("Enroll again");
@@ -314,10 +576,58 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   p = 0;
   while (p != FINGERPRINT_NOFINGER) {
     p = finger.getImage();
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -362,6 +672,30 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   p = finger.image2Tz(2);
   switch (p) {
     case FINGERPRINT_OK:
@@ -394,9 +728,57 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // OK converted!
   Serial.print("Creating model for #");
   Serial.println(id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -432,10 +814,40 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   p = finger.storeModel(id);
   if (p == FINGERPRINT_OK) {
     Serial.println("Stored!");
     addStudent(stuId, id);
+
+
+
+
+
+
 
 
     id++;
@@ -445,6 +857,18 @@ uint8_t getFingerprintEnroll(String stuId) {
     lcd.print("Enrolling");
     delay(2000);
     lcd.clear();
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -466,6 +890,18 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   return true;
 }
 
@@ -476,7 +912,49 @@ uint8_t getFingerprintEnroll(String stuId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 uint8_t verifyFingerPrint() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -543,6 +1021,9 @@ uint8_t verifyFingerPrint() {
     String studentId = getStudentIdByFingerId(finger.fingerID);
     lcd.print(studentId);
 
+
+
+
     delay(2000);
     lcd.clear();
     lcd.print("Attendance");
@@ -559,7 +1040,31 @@ uint8_t verifyFingerPrint() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -590,7 +1095,43 @@ uint8_t verifyFingerPrint() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void emptyFingerDB() {
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -601,6 +1142,30 @@ void emptyFingerDB() {
   lcd.print("Empty DB success");
   delay(2000);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -626,10 +1191,46 @@ void printInteger(int number) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void Parse_the_data() {
   indexOfA = dataIn.indexOf("A");
   data1 = dataIn.substring(0, indexOfA);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -643,8 +1244,14 @@ void addStudent(String studentId, int fingerId) {
     Serial.print("Student ID: ");
     Serial.println(students[numStudents].studentId);
 
+
+
+
     Serial.print("Finger ID: ");
     Serial.println(students[numStudents].fingerId);
+
+
+
 
     numStudents++;  // Tăng số lượng sinh viên
   } else {
@@ -652,6 +1259,9 @@ void addStudent(String studentId, int fingerId) {
     Serial.println("Danh sách sinh viên đã đầy!");
   }
 }
+
+
+
 
 void printAllStudentIdAndFingerId() {
   for (int i = 0; i < numStudents; i++) {
