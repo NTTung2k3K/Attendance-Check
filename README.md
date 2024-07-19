@@ -1,15 +1,15 @@
 # IoT Attendance Check System
 
-## Overview
+## Overview 
 
 This project is an IoT-based attendance check system that uses an ESP8266 module to connect to Google Sheets for sending attendance data. The system includes a fingerprint scanner to identify students and an Arduino board to process the data. The project features a wired connection, and a detailed diagram and component list are provided.
 
 ## Features
 
-- **Fingerprint Scanning:** Identifies students based on their fingerprints.
-- **Real-Time Data Transmission:** Sends attendance data to Google Sheets using the ESP8266 module.
-- **Arduino Processing:** Processes fingerprint data and manages communication between components.
-- **Wired Connections:** Ensures reliable data transmission and component integration.
+- **Fingerprint Scanning:** The system uses a fingerprint sensor to scan and identify students. Each student’s fingerprint is stored in the database for comparison, ensuring accurate identification and eliminating the possibility of proxy attendance.
+- **Real-Time Data Transmission:** Attendance data is sent in real-time to Google Sheets using the ESP8266 Wi-Fi module. This allows for instant updating and monitoring of attendance records from any location with internet access.
+- **Arduino Processing:** An Arduino microcontroller processes the fingerprint data, verifying the identity of the student. It also manages the communication between the fingerprint sensor, ESP8266 module, and other components, ensuring smooth operation of the system.
+- **Wired Connections:** The system uses wired connections between components to ensure reliable data transmission and integration. This reduces the risk of data loss or corruption that can occur with wireless connections, especially in environments with high electromagnetic interference.
 
 ## Team member
 - Nguyễn Thanh Tùng: SE171746
